@@ -12,6 +12,8 @@ use Finite\State\State;
 use Finite\State\StateInterface;
 use Finite\Transition\Transition;
 use Finite\Transition\TransitionInterface;
+use function get_class;
+use function print_r;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -94,7 +96,7 @@ class StateMachine implements StateMachineInterface
         } catch (Exception\NoSuchPropertyException $e) {
             throw new Exception\ObjectException(sprintf(
                'StateMachine can\'t be initialized because the defined property_path of object "%s" does not exist.',
-                get_class($this->object)
+                ($object !== null ? get_class($object):'')
             ), $e->getCode(), $e);
         }
 
@@ -124,7 +126,7 @@ class StateMachine implements StateMachineInterface
                 'The "%s" transition can not be applied to the "%s" state of object "%s" with graph "%s".',
                 $transition->getName(),
                 $this->currentState->getName(),
-                get_class($this->getObject()),
+                ($object !== null ? get_class($object):''),
                 $this->getGraph()
             ));
         }
@@ -223,7 +225,7 @@ class StateMachine implements StateMachineInterface
             throw new Exception\TransitionException(sprintf(
                 'Unable to find a transition called "%s" on object "%s" with graph "%s".',
                 $name,
-                get_class($this->getObject()),
+                ($this->getObject() !== null ? get_class($this->getObject()) : ''),
                 $this->getGraph()
             ));
         }
@@ -242,7 +244,7 @@ class StateMachine implements StateMachineInterface
             throw new Exception\StateException(sprintf(
                 'Unable to find a state called "%s" on object "%s" with graph "%s".',
                 $name,
-                get_class($this->getObject()),
+                ($this->getObject()!== null ? get_class($this->getObject()):''),
                 $this->getGraph()
             ));
         }
@@ -307,7 +309,7 @@ class StateMachine implements StateMachineInterface
 
         throw new Exception\StateException(sprintf(
             'No initial state found on object "%s" with graph "%s".',
-            get_class($this->getObject()),
+            ($this->getObject()!== null ? get_class($this->getObject()):''),
             $this->getGraph()
         ));
     }
